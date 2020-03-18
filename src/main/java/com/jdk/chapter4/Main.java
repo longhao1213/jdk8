@@ -46,6 +46,7 @@ public class Main {
             this.age = age;
         }
 
+
         public User(String name) {
             this.name = name;
         }
