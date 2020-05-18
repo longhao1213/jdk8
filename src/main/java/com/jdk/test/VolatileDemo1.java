@@ -11,22 +11,29 @@ package com.jdk.test;
  */
 public class VolatileDemo1{
 
-    public int count = 0;
+    public static volatile int count = 0;
 
-    public void test1(){
-        for (int i = 0; i < 1000; i++) {
-            count++;
-        }
-    }
+    /**
+     * volatile关键字不能保证原子性，只能保证可见性
+     * 同时也禁止了指令重排序
+     *  volatile使用场景
+     *      对变量的写操作不依赖于当前值
+     *      对变量没有包含在具有变量的不变式中
+     */
 
     public static void main(String[] args) throws InterruptedException {
-        VolatileDemo1 v1 = new VolatileDemo1();
-        Thread t1 = new Thread(()->v1.test1(),"A");
-        Thread t2 = new Thread(()->v1.test1(),"B");
-        t1.start();
-        t2.start();
-        t1.join();
-        t2.join();
-        System.out.println(v1.count);
+        for (int i = 0; i < 5; i++) {
+            new Thread(()->{
+                for (int i1 = 0; i1 < 10; i1++) {
+                    System.out.println(++count);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+        }
     }
 }
